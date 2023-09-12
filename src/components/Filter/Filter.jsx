@@ -11,9 +11,9 @@ const Filter = () => {
   const handleFilter = e => {
     dispatch(setFilter(e.currentTarget.value));
   };
-  // useEffect(() => {
-  //   dispatch(setFilteredContacts(filter));
-  // }, [dispatch, filter]);
+  useEffect(() => {
+    dispatch(setFilteredContacts(filter));
+  }, [dispatch, filter]);
   return (
     <>
       <label className={style.label}>

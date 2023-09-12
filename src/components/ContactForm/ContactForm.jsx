@@ -25,7 +25,6 @@ const ContactForm = () => {
       alert(`Contact with the name "${name}" already exists.`);
       return;
     }
-
     dispatch(addContact({ name, number }));
   };
 
