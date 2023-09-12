@@ -9,7 +9,6 @@ import {
   setName,
   setNumber,
 } from 'redux/contactsSlice';
-import { nanoid } from 'nanoid';
 
 const ContactForm = () => {
   const name = useSelector(selectName);
@@ -18,8 +17,6 @@ const ContactForm = () => {
   const dispatch = useDispatch();
 
   const handleAddContact = (name, number) => {
-    const id = nanoid();
-
     const existingContact = contacts.find(
       contact => contact.name === name.toLowerCase()
     );
@@ -29,7 +26,7 @@ const ContactForm = () => {
       return;
     }
 
-    dispatch(addContact({ name, number, id }));
+    dispatch(addContact({ name, number }));
   };
 
   const onSubmitForm = e => {

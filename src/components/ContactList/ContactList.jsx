@@ -17,7 +17,7 @@ const ContactList = () => {
     dispatch(deleteContact(idBtn));
   };
   useEffect(() => {
-    dispatch(requestContacts());
+    dispatch(requestContacts);
   });
   return (
     <ul>
@@ -25,7 +25,7 @@ const ContactList = () => {
         contacts.map(contact => (
           <li key={contact.id}>
             <p>
-              {contact.name} : {contact.number}
+              {contact.name} : {contact.phone}
             </p>
             <button
               className={style.btn}
