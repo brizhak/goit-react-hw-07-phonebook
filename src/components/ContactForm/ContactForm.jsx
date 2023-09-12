@@ -29,7 +29,7 @@ const ContactForm = () => {
       return;
     }
 
-    dispatch(addContact({ id, name, number }));
+    dispatch(addContact({ name, number, id }));
   };
 
   const onSubmitForm = e => {
