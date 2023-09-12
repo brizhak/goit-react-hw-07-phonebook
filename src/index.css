@@ -1,0 +1,23 @@
+@import-normalize;
+
+body {
+  margin: 0;
+  font-family: 'Oxygen', sans-serif;
+  font-weight: 300;
+  font-size: 20px;
+  background-color: #E5E3E4;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+h1 {
+  margin: 0;
+}
+li {
+  list-style: none;
+}
