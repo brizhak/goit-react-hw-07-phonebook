@@ -2,9 +2,11 @@ import React, { useEffect } from 'react';
 import style from './ContactList.module.css';
 import { useDispatch, useSelector } from 'react-redux';
 import Loader from 'components/Loader';
+import Error from 'components/Error';
 import {
   deleteContact,
   requestContacts,
+  selectError,
   selectContacts,
   selectIsLoading,
 } from 'redux/contactsSlice';
@@ -12,6 +14,7 @@ import {
 const ContactList = () => {
   const contacts = useSelector(selectContacts);
   const isLoading = useSelector(selectIsLoading);
+  const error = useSelector(selectError);
   const dispatch = useDispatch();
 
   const handleDelete = e => {
@@ -24,7 +27,9 @@ const ContactList = () => {
   }, [dispatch]);
   return (
     <ul>
-      {isLoading ? (
+      {error !== null ? (
+        <Error />
+      ) : isLoading ? (
         <Loader />
       ) : (
         contacts &&

@@ -121,5 +121,6 @@ export const {
 export const selectName = state => state.contacts.name;
 export const selectNumber = state => state.contacts.number;
 export const selectContacts = state => state.contacts.contacts.items;
-export const contactsReducer = contactsSlice.reducer;
 export const selectIsLoading = state => state.contacts.contacts.isLoading;
+export const selectError = state => state.contacts.contacts.error;
+export const contactsReducer = contactsSlice.reducer;
