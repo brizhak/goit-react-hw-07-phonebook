@@ -34,12 +34,12 @@ export const addContact = createAsyncThunk(
 
 export const deleteContact = createAsyncThunk(
   'contacts/deleteContact',
-  async (id, thunkApi) => {
+  async (id, thunkAPI) => {
     try {
-      await axios.delete('/contacts/{id}');
-      return id;
-    } catch (error) {
-      return thunkApi.rejectWithValue(error.message);
+      const response = await axios.delete(`/contacts/${id}`);
+      return response.data;
+    } catch (e) {
+      return thunkAPI.rejectWithValue(e.message);
     }
   }
 );
@@ -75,10 +75,6 @@ const contactsSlice = createSlice({
     setNumber(state, action) {
       state.number = action.payload;
     },
-    // addContact(state, action) {
-    //   state.contacts.items.push(action.payload);
-    //   state.originalContacts.push(action.payload);
-    // },
   },
   extraReducers: builder =>
     builder
@@ -107,17 +103,26 @@ const contactsSlice = createSlice({
       .addCase(addContact.rejected, (state, action) => {
         state.contacts.isLoading = false;
         state.contacts.error = action.payload;
+      })
+      .addCase(deleteContact.pending, state => {
+        state.contacts.isLoading = true;
+        state.contacts.error = null;
+      })
+      .addCase(deleteContact.fulfilled, (state, action) => {
+        state.contacts.isLoading = false;
+        state.contacts.items = state.contacts.items.filter(
+          contact => contact.id !== action.payload.id
+        );
+        state.originalContacts = state.contacts.items;
+      })
+      .addCase(deleteContact.rejected, (state, action) => {
+        state.contacts.isLoading = false;
+        state.contacts.error = action.payload;
       }),
 });
 
-export const {
-  setName,
-  setNumber,
-  setContacts,
-  setFilteredContacts,
-  // deleteContact,
-  // addContact,
-} = contactsSlice.actions;
+export const { setName, setNumber, setContacts, setFilteredContacts } =
+  contactsSlice.actions;
 export const selectName = state => state.contacts.name;
 export const selectNumber = state => state.contacts.number;
 export const selectContacts = state => state.contacts.contacts.items;
