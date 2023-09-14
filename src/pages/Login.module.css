@@ -1,8 +1,15 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 40px;
+}
+
 .form {
     display: flex;
     flex-direction: column;
     gap: 15px;
-    width: 350px;
+    width: 380px;
     margin-top: 20px;
 }
 .label {
@@ -33,7 +40,7 @@
     border-radius: 5px;
     transition: background-color 0.3s;
 }
-button:hover {
+.btn:hover {
     background-color: #6f4785;
     color: #d8cce7;
 }

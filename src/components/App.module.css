@@ -1,13 +1,18 @@
-.container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-top: 40px;
+.nav {
+  display: flex;
+  gap: 15px;
 }
-h1 {
-    font-size: 25px;
+
+.nav :is(a) {
+  text-decoration: none;
+  color: black;
+  cursor: pointer;
+  background-color: #bc7fbb;
+  border-color: transparent;    
+  border-radius: 5px;
+  transition: background-color 0.3s, color 0.3s;
 }
-h2 {
-    font-size: 25px;
-    margin-top: 20px;
+.nav :is(a):hover {
+    background-color: #6f4785;
+    color: #d8cce7;
 }

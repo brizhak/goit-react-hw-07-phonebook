@@ -1,13 +1,12 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import axios from 'axios';
-
-axios.defaults.baseURL = 'https://6500459418c34dee0cd49ffa.mockapi.io';
+import { instance } from './authReducer';
+import Notiflix from 'notiflix';
 
 export const requestContacts = createAsyncThunk(
   'contacts/requestContacts',
   async (_, thunkApi) => {
     try {
-      const { data } = await axios.get('/contacts');
+      const { data } = await instance.get('contacts');
 
       return data;
     } catch (error) {
@@ -18,10 +17,9 @@ export const requestContacts = createAsyncThunk(
 
 export const addContact = createAsyncThunk(
   'contacts/addContact',
-  async ({ id, name, number }, thunkApi) => {
+  async ({ name, number }, thunkApi) => {
     try {
-      const { data } = await axios.post('/contacts', {
-        id,
+      const { data } = await instance.post('/contacts', {
         name,
         number,
       });
@@ -36,7 +34,7 @@ export const deleteContact = createAsyncThunk(
   'contacts/deleteContact',
   async (id, thunkAPI) => {
     try {
-      const response = await axios.delete(`/contacts/${id}`);
+      const response = await instance.delete(`/contacts/${id}`);
       return response.data;
     } catch (e) {
       return thunkAPI.rejectWithValue(e.message);
@@ -50,8 +48,6 @@ const contactsInitialState = {
     isLoading: false,
     error: null,
   },
-  name: '',
-  number: '',
   originalContacts: [],
 };
 
@@ -69,44 +65,18 @@ const contactsSlice = createSlice({
         );
       }
     },
-    setName(state, action) {
-      state.name = action.payload;
-    },
-    setNumber(state, action) {
-      state.number = action.payload;
-    },
   },
   extraReducers: builder =>
     builder
-      .addCase(requestContacts.pending, state => {
-        state.contacts.isLoading = true;
-        state.contacts.error = null;
-      })
       .addCase(requestContacts.fulfilled, (state, action) => {
         state.contacts.isLoading = false;
         state.contacts.items = action.payload;
         state.originalContacts = action.payload;
       })
-      .addCase(requestContacts.rejected, (state, action) => {
-        state.contacts.isLoading = false;
-        state.contacts.error = action.payload;
-      })
-      .addCase(addContact.pending, state => {
-        state.contacts.isLoading = true;
-        state.contacts.error = null;
-      })
       .addCase(addContact.fulfilled, (state, action) => {
         state.contacts.isLoading = false;
         state.contacts.items.push(action.payload);
         state.originalContacts.push(action.payload);
-      })
-      .addCase(addContact.rejected, (state, action) => {
-        state.contacts.isLoading = false;
-        state.contacts.error = action.payload;
-      })
-      .addCase(deleteContact.pending, state => {
-        state.contacts.isLoading = true;
-        state.contacts.error = null;
       })
       .addCase(deleteContact.fulfilled, (state, action) => {
         state.contacts.isLoading = false;
@@ -115,16 +85,24 @@ const contactsSlice = createSlice({
         );
         state.originalContacts = state.contacts.items;
       })
-      .addCase(deleteContact.rejected, (state, action) => {
-        state.contacts.isLoading = false;
-        state.contacts.error = action.payload;
-      }),
+      .addMatcher(
+        action => action.type.endsWith('/pending'),
+        state => {
+          state.contacts.isLoading = true;
+          state.contacts.error = null;
+        }
+      )
+      .addMatcher(
+        action => action.type.endsWith('/rejected'),
+        (state, action) => {
+          state.contacts.isLoading = false;
+          state.contacts.error = action.payload;
+          Notiflix.Notify.failure('Something went wrong. Please try again!');
+        }
+      ),
 });
 
-export const { setName, setNumber, setContacts, setFilteredContacts } =
-  contactsSlice.actions;
-export const selectName = state => state.contacts.name;
-export const selectNumber = state => state.contacts.number;
+export const { setFilteredContacts } = contactsSlice.actions;
 export const selectContacts = state => state.contacts.contacts.items;
 export const selectIsLoading = state => state.contacts.contacts.isLoading;
 export const selectError = state => state.contacts.contacts.error;
